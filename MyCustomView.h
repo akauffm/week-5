@@ -13,6 +13,7 @@
 	
 	CGFloat                    squareSize;
 	CGFloat                    rotation;
+	CGFloat                    initialDistance;
 	CGColorRef                 aColor;
 	CGPoint					   startTouchPosition;
 	BOOL                       twoFingers;
