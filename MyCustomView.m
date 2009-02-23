@@ -28,6 +28,9 @@
 	rotation = 0.0f;
 	// You have to explicity turn on multitouch for the view
 	self.multipleTouchEnabled = YES;
+	CGPoint center = [self center];
+	centerx = center.x;
+	centery = center.y;
 	
 	// configure for accelerometer
 	[self configureAccelerometer];
@@ -64,7 +67,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	NSLog(@"touches began count %d, %@", [touches count], touches);
-	UITouch *touch = [touches anyObject]; 
+	UITouch *touch = [touches anyObject];
     startTouchPosition = [touch locationInView:self];
 	
 
@@ -80,8 +83,7 @@
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
 	NSLog(@"touches moved count %d, %@", [touches count], touches);
-	UITouch *touch = [touches anyObject]; 
-    //CGPoint currentTouchPosition = [touch locationInView:self];
+	UITouch *touch = [touches anyObject];
 	
 	if(twoFingers)
 	{	
@@ -92,9 +94,15 @@
 		CGPoint firstTouch = [first locationInView:self];
 		CGPoint	secondTouch = [second locationInView:self];
 		
-		//CGFloat currentDistance = distanceBetweenPoints([first locationInView:self],[second locationInView:self]);
+		squareSize = sqrt((secondTouch.x-firstTouch.x)*(secondTouch.x-firstTouch.x)+(secondTouch.y-firstTouch.y)*(secondTouch.y-firstTouch.y));
 		rotation = atan((secondTouch.y-firstTouch.y)/(secondTouch.x-firstTouch.x));
-		[self setNeedsDisplay];
+	}
+	
+	else
+	{
+	    CGPoint currentTouchPosition = [touch locationInView:self];
+		centerx = currentTouchPosition.x;
+		centery = currentTouchPosition.y;
 	}
 	// tell the view to redraw
 	[self setNeedsDisplay];
@@ -115,8 +123,6 @@
 {
 	NSLog(@"drawRect");
 	
-	CGFloat centerx = rect.size.width/2;
-	CGFloat centery = rect.size.height/2;
 	CGFloat half = squareSize/2;
 	CGRect theRect = CGRectMake(-half, -half, squareSize, squareSize);
 	
