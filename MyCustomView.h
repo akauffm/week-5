@@ -14,6 +14,7 @@
 	CGFloat                    squareSize;
 	CGFloat                    rotation;
 	CGColorRef                 aColor;
+	CGPoint					   startTouchPosition;
 	BOOL                       twoFingers;
 	
 	IBOutlet UILabel           *xField;

@@ -25,7 +25,7 @@
 	// instantiated by the nib
 	squareSize = 100.0f;
 	twoFingers = NO;
-	rotation = 0.5f;
+	rotation = 0.0f;
 	// You have to explicity turn on multitouch for the view
 	self.multipleTouchEnabled = YES;
 	
@@ -64,6 +64,8 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	NSLog(@"touches began count %d, %@", [touches count], touches);
+	UITouch *touch = [touches anyObject]; 
+    startTouchPosition = [touch locationInView:self];
 	
 	if([touches count] > 1)
 	{
@@ -77,6 +79,10 @@
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
 	NSLog(@"touches moved count %d, %@", [touches count], touches);
+	UITouch *touch = [touches anyObject]; 
+    CGPoint currentTouchPosition = [touch locationInView:self];
+	
+	rotation = ((currentTouchPosition.x-startTouchPosition.x)/squareSize);  
 	
 	// tell the view to redraw
 	[self setNeedsDisplay];
@@ -110,7 +116,7 @@
 	CGContextTranslateCTM(context, centerx, centery);
 	
 	// Uncomment to see the rotated square
-	//CGContextRotateCTM(context, rotation);
+	CGContextRotateCTM(context, rotation);
 	
 	// Set red stroke
 	CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
