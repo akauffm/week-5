@@ -69,11 +69,16 @@
 	NSLog(@"touches began count %d, %@", [touches count], touches);
 	UITouch *touch = [touches anyObject];
     startTouchPosition = [touch locationInView:self];
-	
 
+	touches = [event allTouches];
 	if([touches count] >1)
 	{
 		twoFingers = YES;
+	}
+	
+	else 
+	{
+		twoFingers = NO;
 	}
 	
 	// tell the view to redraw
@@ -85,25 +90,27 @@
 	NSLog(@"touches moved count %d, %@", [touches count], touches);
 	UITouch *touch = [touches anyObject];
 	
-	if(twoFingers)
+	if(twoFingers && [touches count] == 2)
 	{	
 		// Storing all my touches individually
-		NSEnumerator *twoTouches = [touches objectEnumerator];
+/*		NSEnumerator *twoTouches = [touches objectEnumerator];
 		UITouch *first = [twoTouches nextObject];
 		UITouch *second = [twoTouches nextObject];
+ */
+		UITouch *first = (UITouch*)[[touches allObjects] objectAtIndex:0];
+		UITouch *second = (UITouch*)[[touches allObjects] objectAtIndex:1];
 		CGPoint firstTouch = [first locationInView:self];
 		CGPoint	secondTouch = [second locationInView:self];
 		
 		squareSize = sqrt((secondTouch.x-firstTouch.x)*(secondTouch.x-firstTouch.x)+(secondTouch.y-firstTouch.y)*(secondTouch.y-firstTouch.y));
-		rotation = atan((secondTouch.y-firstTouch.y)/(secondTouch.x-firstTouch.x));
+		rotation = atan2(secondTouch.y-firstTouch.y,secondTouch.x-firstTouch.x);
 	}
 	
-	else
-	{
+	if(!twoFingers && [touches count] == 1) {
 	    CGPoint currentTouchPosition = [touch locationInView:self];
 		centerx = currentTouchPosition.x;
 		centery = currentTouchPosition.y;
-	}
+}
 	// tell the view to redraw
 	[self setNeedsDisplay];
 }
@@ -155,6 +162,7 @@
 	
 	// like Processing popMatrix
 	CGContextRestoreGState(context);
+
 }
 
 - (void) dealloc
